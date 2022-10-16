@@ -1,18 +1,21 @@
 
-//clean code
-//creating server
-const http = require('http');
 
-const routes = require('./routes.js')
+const express = require('express');
+const app = express();
+app.use((req, res, next) => {
+    console.log('in the middleware');
+    next();
+})
 
-console.log(routes.someText);
+app.use((req, res, next) => {
+    console.log('in the middleware!');
+    res.send( { key1: "value5" });
+    //res.send('<h2>Hello Express.JS</h2>');
 
+})
 
-//sending response 
-
-const server = http.createServer(routes.handler);
-
-server.listen(4000);
+  
+app.listen(3000);
 
 
 
