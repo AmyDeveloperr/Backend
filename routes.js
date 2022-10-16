@@ -1,8 +1,9 @@
-
-const http = require('http');
+// making clean code by exporting this code 
+//const http = require('http');
 const fs = require('fs');
 
-const server = http.createServer((req, res) => {
+const requestHandler = (req, res) => {
+
     const url = req.url;
     const method = req.method;
     
@@ -45,6 +46,24 @@ const server = http.createServer((req, res) => {
     res.write('<body><h1>Hello from my Node JS server</h1></body>');
     res.write('</html>');
     res.end;
-})
 
-server.listen(4000);
+}
+   // just exporting function 
+//module.exports = requestHandler;
+
+//exporting the objec
+
+// module.exports = {
+//     handler: requestHandler,
+//     someText: 'some text'
+// }
+
+//we can also export like this
+
+module.exports.handler = requestHandler;
+module.exports.someText = 'some text';
+
+// we can also omit the module  word
+
+exports.handler = requestHandler;
+exports.someText = 'some text';
