@@ -4,6 +4,12 @@ const cart_items = document.querySelector('#cart .cart-items');
 const parentContainer = document.getElementById('EcommerceContainer');
 parentContainer.addEventListener('click',(e)=>{
 
+    // if(e.target.className === 'add-cart') {
+    //     axios.post('http://localhost:3000/cart', {productId: productId}).then((data)=> {
+    //         console.log(data);
+    //     })
+    // }
+
     if (e.target.className=='shop-item-button'){
         const id = e.target.parentNode.parentNode.id
         const name = document.querySelector(`#${id} h3`).innerText;
@@ -72,22 +78,47 @@ parentContainer.addEventListener('click',(e)=>{
 
 window.addEventListener('DOMContentLoaded', () => {
     axios.get('http://localhost:3000/products').then((data) => {
-        console.log(data);
        if (data.request.status === 200) {
         const products = data.data.products;
-        console.log(products);
         const parentSection = document.getElementById('products');
         products.forEach(product => {
+
             const productHtml = `
             <div>
                 <h1>${product.title}</h1>
                 <img src=${product.imageUrl}></img>
-                <button> ADD TO CART </button>
+                <button onclick="addToCart(${product.id})"> ADD TO CART </button>
             </div>`
             parentSection.innerHTML += productHtml; 
         })
        }
     } )
 })
+
+function addToCart(productId) {
+    axios.post('http://localhost:3000/cart', {productId: productId}).then((res) => {
+       if (res.status === 200) {
+        console.log(res);
+            notifyUsers(res.data.message);
+       } 
+
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+
+function notifyUsers(msg) {
+    const container = document.getElementById('container');
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `<h4>${msg}</h4>`;
+    container.appendChild(notification);
+    setTimeout(()=>{
+        notification.remove();
+    },2500)
+}
+
+
 
 
