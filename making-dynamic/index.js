@@ -51,8 +51,7 @@ parentContainer.addEventListener('click',(e)=>{
         },2500)
     }
     if (e.target.className === 'cart-btn-bottom' || e.target.className === 'cart-bottom' || e.target.className === 'cart-holder'){
-        document.querySelector('#cart').style = "display:block;"
-    }
+        getCartDetails();    }
     if (e.target.className=='cancel'){
         document.querySelector('#cart').style = "display:none;"
     }
@@ -84,7 +83,7 @@ window.addEventListener('DOMContentLoaded', () => {
         products.forEach(product => {
 
             const productHtml = `
-            <div>
+            <div id="cartDetails">
                 <h1>${product.title}</h1>
                 <img src=${product.imageUrl}></img>
                 <button onclick="addToCart(${product.id})"> ADD TO CART </button>
@@ -98,15 +97,30 @@ window.addEventListener('DOMContentLoaded', () => {
 function addToCart(productId) {
     axios.post('http://localhost:3000/cart', {productId: productId}).then((res) => {
        if (res.status === 200) {
-        console.log(res);
             notifyUsers(res.data.message);
-       } 
+       } else {
+            throw new Error (res.data.message);
+       }
 
-    }).catch(err => {
-        console.log(err);
+    }).catch(errMsg => {
+        console.log(errMsg);
+        notifyUsers(errMsg);
     });
 }
 
+function getCartDetails() {
+    axios.get('http://localhost:3000/cart').then(res => {
+        if (res.status === 200) {
+            res.data.products.forEach((product) => {
+                const cartContainer = document.getElementById('cart');
+                cartContainer.innerHTML += `<li><img id="cart-img" src=${product.imageUrl}></img> -${product.title} - ${product.price} - ${product.cartItem.quantity}</li>`;
+            })
+            document.querySelector('#cart').style = "display:block;"
+
+        }
+        console.log(res);
+    }).catch(err => console.log(err));
+}
 
 function notifyUsers(msg) {
     const container = document.getElementById('container');
