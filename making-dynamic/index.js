@@ -117,9 +117,11 @@ function getCartDetails() {
             })
             document.querySelector('#cart').style = "display:block;"
 
+        } else {
+            throw new Error('something went wrong');
         }
         console.log(res);
-    }).catch(err => console.log(err));
+    }).catch(err => {notifyUsers(err)});
 }
 
 function notifyUsers(msg) {
