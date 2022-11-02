@@ -1,14 +1,34 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  const page = +req.query.page || 1;
+  let totalItems;
+  Product.count()
+  .then((total) => {
+    totalItems = total;
+    return Product.findAll({
+      offset: (page-1) * ITEMS_PER_PAGE,
+      limit: ITEMS_PER_PAGE
+    })
+  })
     .then(products => {
-      res.render('shop/product-list', {
-        prods: products,
-        pageTitle: 'All Products',
-        path: '/products'
-      });
+      res.json({
+        products: products,
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        nextPage: page + 1,
+        hasPreviousPage: page > 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems/ITEMS_PER_PAGE)
+        })
+      // res.render('shop/product-list', {
+      //   prods: products,
+      //   pageTitle: 'All Products',
+      //   path: '/products'
+      // });
     })
     .catch(err => {
       console.log(err);
@@ -58,18 +78,24 @@ exports.getCart = (req, res, next) => {
       return cart
         .getProducts()
         .then(products => {
-          res.render('shop/cart', {
-            path: '/cart',
-            pageTitle: 'Your Cart',
-            products: products
-          });
+          res.status(200).json({success: true, products: products});
+          // res.render('shop/cart', {
+          //   path: '/cart',
+          //   pageTitle: 'Your Cart',
+          //   products: products
+          // });
         })
-        .catch(err => console.log(err));
+        .catch(err => res.status(500).json({success: false, message:'Something went wrong' }));
     })
     .catch(err => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
+
+  if (!req.body.productId) {
+    return res.status(400).json({success: false, message: 'product id is not correct'});
+  }
+
   const prodId = req.body.productId;
   let fetchedCart;
   let newQuantity = 1;
@@ -98,9 +124,11 @@ exports.postCart = (req, res, next) => {
       });
     })
     .then(() => {
-      res.redirect('/cart');
+      res.status(200).json({success: true, message: 'successfully added the product'});
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({success: false, message: 'Something went wrong'});
+    });
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
@@ -133,3 +161,4 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: 'Checkout'
   });
 };
+
