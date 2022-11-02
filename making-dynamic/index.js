@@ -58,9 +58,9 @@ parentContainer.addEventListener('click',(e)=>{
     if (e.target.className=='purchase-btn'){
         const purchaseBtn = document.getElementById('purchase-btn');
         purchaseBtn.addEventListener('click',(productId)=>{
-                axios.post(`http://localhost:3000/create-order`,{productId : productId})
+                axios.post(`http://localhost:3000/CreateOrder`,{productId : productId})
                .then(response =>{
-                console.log(response.data.data[0][0].OrderId);
+                console.log(response);
                 cart_items.innerHTML = `<h1>Order has been successfully placed with order id ${response.data.data[0][0].OrderId}</h1>`;
                })
                 .catch(err =>console.log(err))
