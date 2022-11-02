@@ -56,14 +56,24 @@ parentContainer.addEventListener('click',(e)=>{
         document.querySelector('#cart').style = "display:none;"
     }
     if (e.target.className=='purchase-btn'){
-        if (parseInt(document.querySelector('.cart-number').innerText) === 0){
-            alert('You have Nothing in Cart , Add some products to purchase !');
-            return
-        }
-        alert('Thanks for the purchase')
-        cart_items.innerHTML = ""
-        document.querySelector('.cart-number').innerText = 0
-        document.querySelector('#total-value').innerText = `0`;
+        const purchaseBtn = document.getElementById('purchase-btn');
+        purchaseBtn.addEventListener('click',(productId)=>{
+                axios.post(`http://localhost:3000/create-order`,{productId : productId})
+               .then(response =>{
+                console.log(response.data.data[0][0].OrderId);
+                cart_items.innerHTML = `<h1>Order has been successfully placed with order id ${response.data.data[0][0].OrderId}</h1>`;
+               })
+                .catch(err =>console.log(err))
+            })
+
+        // if (parseInt(document.querySelector('.cart-number').innerText) === 0){
+        //     alert('You have Nothing in Cart , Add some products to purchase !');
+        //     return
+        // }
+        // alert('Thanks for the purchase')
+        // cart_items.innerHTML = ""
+        // document.querySelector('.cart-number').innerText = 0
+        // document.querySelector('#total-value').innerText = `0`;
     }
 
     if (e.target.innerText=='REMOVE'){
@@ -125,7 +135,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const page = 1;
     axios.get(`http://localhost:3000/products?page=${page}`)
     .then((res) => {
-        console.log(res);
         listProducts(res.data.products);
         showPagination(res.data);
     }).catch(err => console.log(err));
@@ -171,7 +180,6 @@ function getProducts(page) {
 
     axios.get(`http://localhost:3000/products?page=${page}`)
     .then((res) => {
-        console.log(res);
         listProducts(res.data.products);
         showPagination(res.data);
     }).catch(err => console.log(err));
@@ -229,7 +237,6 @@ function addToCart(productId) {
 function getCartDetails() {
     axios.get('http://localhost:3000/cart').then(res => {
         if (res.status === 200) {
-            console.log(res)
             res.data.products.forEach((product) => {
                 const cartContainer = document.getElementById('cart');
                 cartContainer.innerHTML += `
@@ -258,7 +265,7 @@ function getCartDetails() {
     }).catch(err => {notifyUsers(err)});
 }
 
-
+// notification product added or error
 
 function notifyUsers(msg) {
     const container = document.getElementById('container');
@@ -270,7 +277,6 @@ function notifyUsers(msg) {
         notification.remove();
     },2500)
 }
-
 
 
 
