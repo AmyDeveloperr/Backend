@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
-
+const CartItem = require('../models/cart-item');
 const ITEMS_PER_PAGE = 2;
 
 exports.getProducts = (req, res, next) => {
@@ -162,3 +162,30 @@ exports.getCheckout = (req, res, next) => {
   });
 };
 
+exports.postOrder =  async (req,res,next)=>{
+  let order = await req.user.createOrder() 
+  
+  let myOrders = []
+  req.user.getCart()
+  .then(cart=>{
+      console.log('Inside CartItems',cart)
+      cart.getProducts()
+      .then(async(products)=>{
+          console.log('Cart Products',products)
+          for(let i=0;i<products.length;i++) {
+              // console.log('prodycts',products[i])
+             let order_items =   await order.addProduct(products[i] , { 
+                  through : {quantity : products[i].cartItem.quantity} })
+                  myOrders.push(order_items)
+                      console.log(myOrders)
+                 }
+                 CartItem.destroy({where:{cartId : cart.id}})
+                 .then(response=>console.log(response))
+                 res.status(200).json({data: myOrders , success : true})
+               })
+      .catch(err=>console.log(err))
+  })
+  .catch((err)=>{
+       res.status(500).json(err)
+  })
+}
