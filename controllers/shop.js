@@ -149,10 +149,15 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders'
-  });
+  req.user.getOrders({include : ["products"]})
+  .then(products =>{
+    res.status(200).json({products:products})
+  })
+  .catch(err => console.log(err))
+  // res.render('shop/orders', {
+  //   path: '/orders',
+  //   pageTitle: 'Your Orders'
+  // });
 };
 
 exports.getCheckout = (req, res, next) => {
