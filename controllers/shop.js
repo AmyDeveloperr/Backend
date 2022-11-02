@@ -1,6 +1,8 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 const CartItem = require('../models/cart-item');
+const OrderItem = require('../models/orderItems');
+
 const ITEMS_PER_PAGE = 2;
 
 exports.getProducts = (req, res, next) => {
@@ -147,13 +149,12 @@ exports.postCartDeleteProduct = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
-
 exports.getOrders = (req, res, next) => {
   req.user.getOrders({include : ["products"]})
   .then(products =>{
     res.status(200).json({products:products})
   })
-  .catch(err => console.log(err))
+  .catch(err => res.status(500).json({success: false, message:'Something went wrong' }));
   // res.render('shop/orders', {
   //   path: '/orders',
   //   pageTitle: 'Your Orders'
