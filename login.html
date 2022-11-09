@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="form-items">
+        <form id="form" action="POST">
+            <label class="form-content">Username</label><input id="name" type="text" name="lUserName">
+            <label class="form-content">Password</label><input id="pass" type="text" name="lPass">
+            <button type="submit" class="form-content">Login</button>
+            <button class="form-content" formaction="home.html">Signup</button>
+        </form>
+    </div>
+    <script src ="login.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+</body>
+</html>
