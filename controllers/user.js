@@ -1,7 +1,10 @@
 
 const User = require('../models/user')
-
+// using blowflish algo for encryption
 const bcrypt = require('bcrypt');
+
+const jwt = require('jsonwebtoken');
+const { JsonWebTokenError } = require('jsonwebtoken');
 
 exports.addUserDetails = async (req, res, next) => {
     
@@ -35,6 +38,11 @@ exports.addUserDetails = async (req, res, next) => {
 
 };
 
+//we are generating token here
+function generateAccessToken(id) {
+    return jwt.sign({userId: id}, 'barbalugota')
+}
+
 exports.addLoginDetails = async (req, res, next) => {
 
 try {
@@ -53,7 +61,10 @@ try {
                         res.status(500).json({message:'something went wrong'});
                     }
                     if(result === true) {
-                        res.status(201).json({message:'user login successful'});
+                        
+                        return res.status(201).json({message:'user login successful', token: generateAccessToken(dbData[0].id)});
+
+                        // return res.status(201).json({message:'user login successful'});
                     }
                 
                 else {
@@ -70,3 +81,4 @@ try {
 }
 
 };
+
