@@ -12,18 +12,18 @@
 // async function addExpense(e) {
 //     e.preventDefault();
 //     try {
-    
+//         console.log('add event listener calledm,1')
 //     const expenseDetails = {
 //         amount: amount.value,
 //         description: description.value,
 //         category: category.value
 //     } 
 
-//     amount.value = '';
-//     description.value = '';
-//     category.value = '';
+//     // amount.value = '';
+//     // description.value = '';
+//     // category.value = '';
     
-   
+//    console.log('add event listener calledm,', expenseDetails)
 //     const res = await axios.post('http://localhost:3000/expense/add', expenseDetails);
    
 //         showDetailsOnScreen(res.data.expDetails);
@@ -89,7 +89,8 @@ async function onClick(e) {
         category.value="";
 
         try {
-       const res = await axios.post('http://localhost:3000/expense/add', expenseDetails);
+            const token = localStorage.getItem('token');
+       const res = await axios.post('http://localhost:3000/expense/add', expenseDetails, {headers: {"Authorization": token}});
       
         showDetailsOnScreen(res.data.expDetails);
         //console.log(response)
@@ -98,9 +99,10 @@ async function onClick(e) {
 }
 
 window.addEventListener("DOMContentLoaded", async() => {
+    const token = localStorage.getItem('token');
     
     try {
-    const res = await axios.get('http://localhost:3000/expense/get');
+    const res = await axios.get('http://localhost:3000/expense/get', {headers: {"Authorization" : token}});
     
         for (var i = 0; i < res.data.allDetails.length; i++) {
             showDetailsOnScreen(res.data.allDetails[i]);
@@ -136,7 +138,8 @@ function editDetails(amount,category,description,expenseId) {
 
 async function deleteUser(id) {
     try {
-    const res = await axios.delete(`http://localhost:3000/expense/delete-expense/${id}`)
+        const token = localStorage.getItem('token');
+    const res = await axios.delete(`http://localhost:3000/expense/delete-expense/${id}`, {headers: {'Authorization': token}});
    
         removeUserFromScreen(id);
  
