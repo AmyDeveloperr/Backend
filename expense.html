@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div>
+        <button id="premBtn" type="submit">Become Premium User</button>
+    </div>
     <div class="form-items">
         <form id ="formExp" method="POST">
             <label class="form-content">Add Expense:</label><input id="expense" type="number" name="expense" required><br><br>
@@ -22,9 +25,11 @@
             <!-- <input id="submit" class="form-content" type="submit" value="Add"> -->
             <button id="submit" class="form-content" type="submit">Add Expense</button>
         </form>
+        
         <ul id ="listDetails"></ul>
     </div>
     <script src ="expense.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 </body>
 </html>
