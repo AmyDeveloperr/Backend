@@ -9,12 +9,15 @@
 </head>
 <body>
     <div class="form-items">
-        <form id="form" action="POST">
-            <label class="form-content">Username</label><input id="name" type="text" name="lUserName">
-            <label class="form-content">Password</label><input id="pass" type="text" name="lPass">
+        <form id="lform" action="POST">
+            <label class="form-content">Email</label><input id="lemail" type="email" name="lemail"><br><br>
+            <label class="form-content">Password</label><input id="lpass" type="password" name="lPass"><br><br>
             <button type="submit" class="form-content">Login</button>
-            <button class="form-content" formaction="home.html">Signup</button>
         </form>
+        <button onclick="window.location.href='forgotPass.html';" id="forgot" type="submit" class="form-content" >Forgot Password</button>
+
+        <!-- <button class="form-content" formaction="home.html">Signup</button> -->
+        <a href="home.html">New User- Sign up now!</a>
     </div>
     <script src ="login.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
