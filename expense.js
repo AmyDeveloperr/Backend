@@ -180,9 +180,12 @@ document.getElementById('premBtn').onclick = async function (e) {
          axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
              order_id: options.order_id,
              payment_id: response.razorpay_payment_id,
-         }, { headers: {"Authorization" : token} }).then(() => {
-           
-             alert('You are a Premium User Now');
+         }, { headers: {"Authorization" : token} }).then((res) => {
+               if(res.status === 202) {
+                localStorage.setItem('user', true);
+                alert('You are a Premium User Now');
+               }
+             
              
          }).catch(() => {
              alert('Something went wrong. Try Again!!!')
@@ -203,3 +206,26 @@ document.getElementById('premBtn').onclick = async function (e) {
   alert(response.error.metadata.payment_id);
  });
 }
+
+
+function download(){
+    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    .then((response) => {
+        if(response.status === 201){
+            //the bcakend is essentially sending a download link
+            //  which if we open in browser, the file would download
+            var a = document.createElement("a");
+            a.href = response.data.fileUrl;
+            a.download = 'myexpense.csv';
+            a.click();
+        } else {
+            throw new Error(response.data.message)
+        }
+
+    })
+    .catch((err) => {
+        showError(err)
+    });
+}
+
+
